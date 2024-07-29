@@ -1,4 +1,3 @@
-from flask import Flask, render_template, request
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -6,21 +5,6 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
-
-
-app = Flask(__name__)
-
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/submit', methods=['POST'])
-def submit():
-    state = request.form.get('option1')
-    district = request.form.get('option2')
-    area = request.form.get('hectare')
-    
-    return render_template('index.html')
 
 data = pd.read_csv('data.csv')  
 data['Year'] = pd.to_datetime(data['Year'], format='%Y')
@@ -143,6 +127,3 @@ for i, name in enumerate(column_names):
     print(f"  Predicted next value: {future_predictions_unscaled[0, i]:.2f}")
     print(f"  Predicted change: {future_predictions_unscaled[0, i] - y_test_unscaled[-1, i]:.2f}")
     print()
-
-if __name__ == '__main__':
-    app.run(debug=True)
