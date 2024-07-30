@@ -19,7 +19,7 @@
                 <div class="dropdown-container">
                     <select name="option1">
                         <option value="" disabled selected>Select State</option>
-                        <option value="1">Option 1</option>
+                        <option value="1">Tamilnadu</option>
                         <option value="2">Option 2</option>
                         <option value="3">Option 3</option>
                         <option value="4">Option 4</option>
@@ -27,7 +27,7 @@
                     </select>
                     <select name="option2">
                         <option value="" disabled selected>Select District</option>
-                        <option value="1">Option 1</option>
+                        <option value="1">Chennai</option>
                         <option value="2">Option 2</option>
                         <option value="3">Option 3</option>
                         <option value="4">Option 4</option>
@@ -42,7 +42,26 @@
             <!-- Bottom Boxes -->
             <div class="content-container">
                 <div class="main-content">
-                    <div class="inner-container"></div>
+                    <div class="inner-container">
+                        <p>State Code: {{ state_code }}</p>
+                        <p>District Code: {{ district_code }}</p>
+                        <table border="1">
+                            <tr>
+                                <th>Crop</th>
+                                <th>Area (1000 ha)</th>
+                                <th>Production (1000 tons)</th>
+                                <th>Yield (Kg per ha)</th>
+                            </tr>
+                            {% for crop in crops %}
+                            <tr>
+                                <td>{{ crop.name }}</td>
+                                <td>{{ crop.area }}</td>
+                                <td>{{ crop.production }}</td>
+                                <td>{{ crop.yield }}</td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
                 </div>
                 <div class="side-content">
                     <div class="inner-container"></div>

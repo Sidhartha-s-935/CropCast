@@ -14,13 +14,7 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
-@app.route('/submit', methods=['POST'])
-def submit():
-    state = request.form.get('option1')
-    district = request.form.get('option2')
-    area = request.form.get('hectare')
-    
-    return render_template('index.html')
+
 
 data = pd.read_csv('data.csv')  
 data['Year'] = pd.to_datetime(data['Year'], format='%Y')
@@ -135,14 +129,71 @@ future_predictions_unscaled = predict_future_unscaled(model, scaler, last_sequen
 print("Future predictions (unscaled):")
 for i, pred in enumerate(future_predictions_unscaled):
     print(f"Year {i+1}: {pred}")
+    
+raw_data = ""
 
 column_names = data_numeric.columns
 for i, name in enumerate(column_names):
-    print(f"{name}:")
-    print(f"  Last known value: {y_test_unscaled[-1, i]:.2f}")
-    print(f"  Predicted next value: {future_predictions_unscaled[0, i]:.2f}")
-    print(f"  Predicted change: {future_predictions_unscaled[0, i] - y_test_unscaled[-1, i]:.2f}")
-    print()
+    raw_data += f"{name}:\n"
+    raw_data += f"  Last known value: {y_test_unscaled[-1, i]:.2f}\n"
+    raw_data += f"  Predicted next value: {future_predictions_unscaled[0, i]:.2f}\n"
+    raw_data += f"  Predicted change: {future_predictions_unscaled[0, i] - y_test_unscaled[-1, i]:.2f}\n"
+    raw_data += "\n"
+
+print(raw_data)
+
+def parse_raw_data(raw_data):
+    lines = raw_data.strip().split('\n')
+    data = {}
+    current_category = None
+
+    for line in lines:
+        line = line.strip()
+        if line.endswith(':'):
+            current_category = line.replace(':', '')
+            data[current_category] = {}
+        elif ': ' in line:
+            key, value = line.split(': ')
+            data[current_category][key] = float(value)
+
+    return data
+
+data = parse_raw_data(raw_data)
+
+# Extracting district and state codes
+district_code = data["Dist Code"]["Predicted next value"]
+state_code = data["State Code"]["Predicted next value"]
+
+# Dynamically create crops list
+crops = {}
+for key in data.keys():
+    if key not in ["Dist Code", "State Code"]:
+        parts = key.split()
+        crop_name = " ".join(parts[:-3]).title()
+        metric = parts[-3].lower()
+        value = data[key]["Predicted next value"]
+        if crop_name not in crops:
+            crops[crop_name] = {"area": None, "production": None, "yield": None}
+        crops[crop_name][metric] = value
+
+# Convert crops dictionary to a list of dictionaries
+crops_list = []
+for crop, values in crops.items():
+    crops_list.append({
+        "name": crop,
+        "area": values.get("area", None),
+        "production": values.get("production", None),
+        "yield": values.get("yield", None)
+    })
+
+print(crops_list)
+@app.route('/submit', methods=['POST'])
+def submit():
+    state = request.form.get('option1.value')
+    district = request.form.get('option2.value')
+    area = request.form.get('hectare')
+    
+    return render_template('index.html', state_code=state, district_code=district, crops=crops)
 
 if __name__ == '__main__':
     app.run(debug=True)
