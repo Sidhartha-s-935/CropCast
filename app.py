@@ -173,7 +173,7 @@ for key in data.keys():
         metric = parts[-3].lower()
         value = data[key]["Predicted next value"]
         if crop_name not in crops:
-            crops[crop_name] = {"area": None, "production": None, "yield": None}
+            crops[crop_name] = {"area": None, "production": None}
         crops[crop_name][metric] = value
 
 # Convert crops dictionary to a list of dictionaries
@@ -183,17 +183,17 @@ for crop, values in crops.items():
         "name": crop,
         "area": values.get("area", None),
         "production": values.get("production", None),
-        "yield": values.get("yield", None)
     })
 
 print(crops_list)
+print(crops)
 @app.route('/submit', methods=['POST'])
 def submit():
-    state = request.form.get('option1.value')
-    district = request.form.get('option2.value')
+    state = request.form.get('option1')
+    district = request.form.get('option2')
     area = request.form.get('hectare')
     
-    return render_template('index.html', state_code=state, district_code=district, crops=crops)
+    return render_template('index.html', state_code=state, district_code=district, crops=crops_list)
 
 if __name__ == '__main__':
     app.run(debug=True)

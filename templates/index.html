@@ -20,7 +20,7 @@
                     <select name="option1">
                         <option value="" disabled selected>Select State</option>
                         <option value="1">Tamilnadu</option>
-                        <option value="2">Option 2</option>
+                        <option value="Chhattisgarh">Chhattisgarh</option>
                         <option value="3">Option 3</option>
                         <option value="4">Option 4</option>
                         <option value="5">Option 5</option>
@@ -28,7 +28,7 @@
                     <select name="option2">
                         <option value="" disabled selected>Select District</option>
                         <option value="1">Chennai</option>
-                        <option value="2">Option 2</option>
+                        <option value="Durg">Durg</option>
                         <option value="3">Option 3</option>
                         <option value="4">Option 4</option>
                         <option value="5">Option 5</option>
@@ -50,14 +50,12 @@
                                 <th>Crop</th>
                                 <th>Area (1000 ha)</th>
                                 <th>Production (1000 tons)</th>
-                                <th>Yield (Kg per ha)</th>
                             </tr>
                             {% for crop in crops %}
                             <tr>
                                 <td>{{ crop.name }}</td>
                                 <td>{{ crop.area }}</td>
                                 <td>{{ crop.production }}</td>
-                                <td>{{ crop.yield }}</td>
                             </tr>
                             {% endfor %}
                         </table>
