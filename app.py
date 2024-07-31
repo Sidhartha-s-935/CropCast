@@ -20,7 +20,7 @@ def submit():
     district = request.form.get('option2')
     area = request.form.get('hectare')
     
-    df = pd.read_csv("cICRISAT-District Level Data All states.csv")
+    df = pd.read_csv("ICRISAT-District Level Data All states.csv")
 
     max_df = df[df['Dist Name'] == district]
 
