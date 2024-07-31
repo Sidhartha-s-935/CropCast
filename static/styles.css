@@ -88,7 +88,16 @@ main {
     
 }
 
-.main-content,
+.main-content{
+    background-color: var(--inner-element-background-color);
+    height: 24rem;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
 .side-content {
     background-color: var(--inner-element-background-color);
     height: 24rem;
@@ -101,10 +110,17 @@ main {
 
 .inner-container {
     background-color: #e5e7eb;
-    flex: 1;
     border-radius: 0.25rem;
     overflow-x: auto;
     overflow-y: auto;
+}
+
+.Pie{
+    background-color: #e5e7eb;
+    border-radius: 0.25rem;
+    overflow-x: auto;
+    overflow-y: auto;
+    padding-left: 0.5rem;
 }
 
 table {
@@ -112,7 +128,13 @@ table {
     border-collapse: collapse;
 }
 
-table th, table td {
+table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+table th{
     padding: 10px;
     border: 1px solid #ddd;
     text-align: left;
