@@ -1,3 +1,41 @@
+
+function getTableData() {
+    const crops = [];
+    const productions = [];
+    const table = document.querySelector('table');
+    const rows = table.querySelectorAll('tr');
+
+    // Loop through the first five rows, skipping the header row
+    for (let i = 1; i <= 5; i++) {
+        const cells = rows[i].querySelectorAll('td');
+        crops.push(cells[0].innerText);
+        productions.push(parseFloat(cells[2].innerText));
+    }
+    return { crops, productions };
+}
+
+// Create the pie chart
+function createPieChart(crops, productions) {
+    const ctx = document.getElementById('myPieChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: crops,
+            datasets: [{
+                data: productions,
+                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+                hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                text: 'Top 5 Crop Production (1000 tons)'
+            }
+        }
+    });
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     const stateToDistricts = {
         "Andhra Pradesh": ["Anantapur", "Chittoor", "East Godavari", "Guntur", "Krishna", "Kurnool", "Prakasam", "Srikakulam", "Sri Potti Sriramulu Nellore", "Visakhapatnam", "Vizianagaram", "West Godavari", "YSR Kadapa"],
@@ -58,4 +96,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Ensure default options are set on page load
     stateSelect.val(null).trigger('change');
     districtSelect.empty().append('<option value="" disabled selected>Select District</option>').trigger('change');
+
+    const { crops, productions } = getTableData();
+    createPieChart(crops, productions);
 });
