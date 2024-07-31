@@ -7,7 +7,7 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 
 
-df = pd.read_csv("ICRISAT-District Level Data All states.csv")
+df = pd.read_csv("CropCast/Data Set.csv")
 
 # state = input()
 district = input()
