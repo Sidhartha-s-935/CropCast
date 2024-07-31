@@ -160,11 +160,9 @@ def parse_raw_data(raw_data):
 
 data = parse_raw_data(raw_data)
 
-# Extracting district and state codes
 district_code = data["Dist Code"]["Predicted next value"]
 state_code = data["State Code"]["Predicted next value"]
 
-# Dynamically create crops list
 crops = {}
 for key in data.keys():
     if key not in ["Dist Code", "State Code"]:
@@ -176,7 +174,6 @@ for key in data.keys():
             crops[crop_name] = {"area": None, "production": None}
         crops[crop_name][metric] = value
 
-# Convert crops dictionary to a list of dictionaries
 crops_list = []
 for crop, values in crops.items():
     crops_list.append({
