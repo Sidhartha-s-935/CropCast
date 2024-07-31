@@ -60,12 +60,20 @@ main {
     gap: 1rem;
 }
 
+/* Style for the dropdown menu to show only 5 options at a time and enable scrolling */
+.menu {
+    max-height: 150px; /* Height to show around 5 options */
+    overflow-y: auto; /* Enables vertical scrolling */
+    border: 1px solid var(--bar-background-color); /* Optional: border for better visualization */
+}
+
 .dropdown-container select {
     padding: 0.5rem;
     border: 1px solid var(--bar-background-color);
     border-radius: 0.25rem;
     background-color: var(--inner-element-background-color);
 }
+
 .button-container {
     display: flex;
     justify-content: center;
@@ -85,7 +93,6 @@ main {
     display: grid;
     grid-template-columns: 2fr 1fr;
     gap: 1rem;
-    
 }
 
 .main-content,
