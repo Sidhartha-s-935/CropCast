@@ -6,7 +6,20 @@ import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 
-data = pd.read_csv('data.csv')  
+
+df = pd.read_csv("ICRISAT-District Level Data All states.csv")
+
+# state = input()
+district = input()
+
+max_df = df[df['Dist Name'] == district]
+
+print(max_df)
+
+max_df.to_csv("data_ICRI.csv", index=False)
+print("Result saved to 'data_ICRI.csv'")
+
+data = pd.read_csv('data_ICRI.csv')  
 data['Year'] = pd.to_datetime(data['Year'], format='%Y')
 data = data.set_index('Year')
 
