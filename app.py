@@ -89,7 +89,7 @@ def submit():
     optimizer = optim.Adam(model.parameters())
 
 
-    num_epochs = 50
+    num_epochs = 100
     batch_size = 32
 
     for epoch in range(num_epochs):
@@ -176,40 +176,34 @@ def submit():
     crops_list = []
     
     crop_prices = {
-        "Rice": 20.5,
-        "Wheat": 18.75,
-        "Maize": 15.0,
-        "Kharif Sorghum": 12.0,
-        "Rabi Sorghum": 13.0,
-        "Pearl Millet": 10.5,
-        "Finger Millet": 14.0,
-        "Barley": 16.0,
-        "Chickpea": 50.0,
-        "Pigeonpea": 60.0,
-        "Minor Pulses": 45.0,
-        "Groundnut": 70.0,
-        "Sesamum": 80.0,
-        "Rapeseed and Mustard": 65.0,
-        "Safflower": 55.0,
-        "Castor": 40.0,
-        "Linseed": 52.0,
-        "Sunflower": 75.0,
-        "Soyabean": 35.0,
-        "Oilseeds": 60.0,
-        "Sugarcane": 3.0,  
-        "Cotton": 80.0,
-        "Fruits": 40.0,  
-        "Vegetables": 20.0,  
-        "Potatoes": 10.0,
-        "Onion": 12.0,
-        "Fodder": 5.0  
+        "Rice": 2183,
+        "Wheat": 2275,
+        "Maize": 2090,
+        "Kharif Sorghum": 3054,
+        "Rabi Sorghum": 3100,
+        "Pearl Millet": 2291,
+        "Finger Millet": 2568,
+        "Barley": 1803,
+        "Chickpea": 2522,
+        "Pigeonpea": 4382,
+        "Minor Pulses": 1785,
+        "Groundnut": 3213,
+        "Sesamum": 3425,
+        "Rapeseed and Mustard": 5650,
+        "Safflower": 5800,
+        "Castor": 5954,
+        "Linseed": 2246,
+        "Sunflower": 6342,
+        "Soyabean": 4600,
+        "Oilseeds": 3467,  
+        "Cotton": 6620,
     }
 
     for crop, values in crops.items():
         area = values.get("area")
         production = values.get("production")
         crop_yield = round(production / area, 2) if area and production else None
-        price = crop_prices.get(crop, 0)
+        price = (crop_prices.get(crop, 0)*crop_yield) if crop_yield else crop_prices.get(crop,0)
         crops_list.append({
             "name": crop,
             "area": area,

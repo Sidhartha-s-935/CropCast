@@ -49,7 +49,7 @@
           <select name="option2">
             <option value="" disabled selected>Select District</option>
           </select>
-          <input type="number" name="hectare" placeholder="Enter value in Hectare" min="0" step="0.01" >
+          <input type="number" name="hectare" placeholder="Enter value in hectare" min="0" step="0.01" >
         </div>
         <div class="button-container">
             <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
@@ -106,7 +106,7 @@
               <h2 class="head">Recommended Allocation</h2>
               <ul class="a">
                 {% for item in allocation_results %}
-                <li>Plant {{ item.area }} hectares of {{ item.crop }}</li>
+                <li>Plant {{ item.area }} hectare of {{ item.crop }}</li>
                 {% endfor %}
               </ul>
               <div class="bar">
