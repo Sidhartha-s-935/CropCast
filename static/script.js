@@ -28,13 +28,24 @@ function createPieChart(crops, productions) {
             }]
         },
         options: {
-            title: {
-                display: true,
-                text: 'Top 5 Crop Production (1000 tons)'
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Top 5 Crops [Production]',
+                    font: {
+                        size: 32    
+                    }
+                },
+                legend: {
+                    display: true,
+                    position: 'bottom',
+                    align:'center',
+                },
             }
         }
     });
 }
+
 
 document.addEventListener("DOMContentLoaded", function () {
     const stateToDistricts = {
