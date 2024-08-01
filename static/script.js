@@ -18,7 +18,7 @@ function getTableData() {
 function createPieChart(crops, productions) {
     const ctx = document.getElementById('myPieChart').getContext('2d');
     new Chart(ctx, {
-        type: 'pie',
+        type: 'doughnut',
         data: {
             labels: crops,
             datasets: [{
