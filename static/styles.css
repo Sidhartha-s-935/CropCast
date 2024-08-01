@@ -1,10 +1,10 @@
 :root {
     /* Color Variables */
-    --background-color: #E9F1F2; /* Main background color */
-    --element-background-color: #BFD6D9; /* Background color for elements */
+    --background-color: #fbffff; /* Main background color */
+    --element-background-color: #42a4b0; /* Background color for elements */
     --inner-element-background-color: #ffffff; /* Background color for inner elements */
-    --bar-background-color: #9FBCBF; /* Background color for top and bottom bars */
-    --text-color: #313E40; /* Primary text color */
+    --bar-background-color: #175084; /* Background color for top and bottom bars */
+    --text-color: #11364b; /* Primary text color */
     --highlight-color: #666666; /* Highlight or alternate text color */
 }
 
@@ -36,7 +36,8 @@ header {
 header .title {
     font-size: 1rem;
     font-weight: bold;
-    padding-left: 3.5rem;
+    padding-left: 2rem;
+    color: #fbffff;
 }
 
 main {
@@ -64,7 +65,7 @@ main {
     padding: 0.5rem;
     border: 1px solid var(--bar-background-color);
     border-radius: 0.25rem;
-    background-color: var(--inner-element-background-color);
+    background-color: var(--bar-background-color);
 }
 .button-container {
     display: flex;
@@ -75,10 +76,10 @@ main {
 .button-container button {
     padding: 0.5rem 3rem;
     font-size: 1rem;
-    border: 1px solid var(--bar-background-color);
-    border-radius: 2rem;
-    background-color: var(--inner-element-background-color);
-    color: var(--text-color);
+    border:none;
+    border-radius: 0.5rem;
+    background-color: #6db2c3;
+    color: #fbffff;
 }
 
 .content-container {
@@ -89,7 +90,7 @@ main {
 }
 
 .main-content{
-    background-color: var(--inner-element-background-color);
+    background-color: #ffffff;
     height: 30rem;
     border-radius: 0.5rem;
     padding: 1rem;
@@ -109,17 +110,17 @@ main {
 }
 
 .inner-container {
-    background-color: #e5e7eb;
+    background-color: #ffffff;
     border-radius: 0.25rem;
     padding: 1rem;
-    align-content: center;
+    align-content: baseline;
     overflow-x: auto;
     overflow-y: auto;
     height: 28rem;
 }
 
 .Pie{
-    background-color: #e5e7eb;
+    background-color: #ffffff;
     border-radius: 0.25rem;
     overflow-x: auto;
     overflow-y: auto;
