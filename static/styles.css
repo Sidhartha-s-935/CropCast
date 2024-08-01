@@ -1,10 +1,16 @@
 :root {
     --background-color: #fbffff;
+    /* Main background color */
     --element-background-color: #42a4b0;
+    /* Background color for elements */
     --inner-element-background-color: #ffffff;
+    /* Background color for inner elements */
     --bar-background-color: #175084;
+    /* Background color for top and bottom bars */
     --text-color: #11364b;
+    /* Primary text color */
     --highlight-color: #ffffff;
+    /* Highlight or alternate text color */
 }
 
 body {
@@ -45,7 +51,10 @@ main {
 }
 
 .container {
-    padding: 0 2rem 0 0;
+    padding-right: 2rem;
+    padding-left: 2rem;
+    padding-bottom: 0rem;
+    padding-left: 0rem;
     border-radius: 0.2rem;
     display: grid;
     gap: 0.5rem;
@@ -64,17 +73,11 @@ main {
     background-color: var(--bar-background-color);
 }
 
-.dropdown-container input{
-    border: 1px solid rgb(190, 186, 186);
-    border-radius: 0.25rem;
-}
-
 .button-container {
     display: flex;
     justify-content: center;
     margin: 1rem;
 }
-
 button {
     font-family: 'Jost', sans-serif;
     padding: 0;
@@ -82,22 +85,27 @@ button {
     border: none;
     background: none;
     cursor: pointer;
+  }
+  
+  button {
+    --primary-color: #111;
+    --hovered-color: #175084;
     position: relative;
     display: flex;
     font-weight: 100;
     font-size: 26px;
     gap: 0.5rem;
     align-items: center;
-}
-
-button p {
+  }
+  
+  button p {
     margin: 0;
     position: relative;
     font-size: 20px;
     color: var(--primary-color);
-}
-
-button::after {
+  }
+  
+  button::after {
     position: absolute;
     content: "";
     width: 0;
@@ -106,9 +114,9 @@ button::after {
     background: var(--hovered-color);
     height: 2px;
     transition: 0.3s ease-out;
-}
-
-button p::before {
+  }
+  
+  button p::before {
     position: absolute;
     content: "Submit";
     width: 0%;
@@ -116,16 +124,16 @@ button p::before {
     color: var(--hovered-color);
     overflow: hidden;
     transition: 0.3s ease-out;
-}
-
-button:hover::after {
+  }
+  
+  button:hover::after {
     width: 100%;
-}
-
-button:hover p::before {
+  }
+  
+  button:hover p::before {
     width: 100%;
-}
-
+  }
+  
 .content-container {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -203,52 +211,7 @@ table th {
     z-index: 20;
 }
 
-@media (max-width: 768px) {
-    header .title {
-        font-size: 0.9rem;
-        padding-left: 1rem;
-    }
-    main {
-        padding: 1rem;
-    }
-    .container {
-        padding: 0 1rem 0 0;
-    }
-    .dropdown-container {
-        grid-template-columns: 1fr;
-    }
-    .content-container {
-        grid-template-columns: 1fr;
-    }
-    .main-content, .side-content {
-        height: auto;
-    }
-}
-
-@media (max-width: 480px) {
-    header .title {
-        font-size: 0.8rem;
-        padding-left: 0.5rem;
-    }
-    main {
-        padding: 0.5rem;
-    }
-    .container {
-        padding: 0 0.5rem 0 0;
-    }
-    .dropdown-container {
-        grid-template-columns: 1fr;
-    }
-    button {
-        font-size: 20px;
-    }
-    button p {
-        font-size: 16px;
-    }
-    .content-container {
-        grid-template-columns: 1fr;
-    }
-    .main-content, .side-content {
-        height: auto;
-    }
+a{
+    text-decoration: none;
+    color: #ffffff;
 }

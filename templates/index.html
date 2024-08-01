@@ -54,7 +54,9 @@
         <div class="button-container">
             <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
           </svg>
-          <button type="submit">Submit</button>
+          <div class="button-container">
+            <button  type="submit">Submit</button>
+          </div>
         </div>
       </form>
       <!--Box 1-->
@@ -73,7 +75,7 @@
                 <td>{{ crop.name }}</td>
                 <td>{{ crop.area }}</td>
                 <td>{{ crop.production }}</td>
-                <td>{{ crop.yield }}</td>
+                <td>{{ crop.yield | round(2) }}</td>
               </tr>
               {% endfor %}
             </table>
@@ -118,7 +120,7 @@
       </div>
     </div>
   </main>
-  <footer>SIDHARTHA S | MALAVIKA L | PRASANNA K P | STEPHEN PAUL I</footer>
+  <footer><a href="https://github.com/Sidhartha-s-935">SIDHARTHA S</a> |<a href="https://github.com/Mxlzz31"> MALAVIKA L </a>|<a href="https://github.com/wisebreadloaf"> PRASANNA K P </a>|<a href="https://github.com/StephenPaul-03"> STEPHEN PAUL I</a></footer>
 </body>
 
 </html>
