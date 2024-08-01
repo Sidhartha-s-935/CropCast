@@ -235,7 +235,7 @@ def submit():
 
     def greedy_crop_allocation(crops, total_area):
         for crop in crops:
-            if crop['area'] > 0:  
+            if crop['area'] > 0:
                 crop['yield'] = crop['production'] / crop['area']
                 crop['profit_per_area'] = crop['yield'] * crop['price']
             else:
@@ -250,20 +250,41 @@ def submit():
         
         for crop in sorted_crops:
             if remaining_area > 0:
-                allocated_area = min(crop['area'], remaining_area)
-                allocation[crop['name']] = round(allocated_area, 2)
-                remaining_area -= allocated_area
-                
-                crop_profit = allocated_area * crop['profit_per_area']
-                total_profit += crop_profit
+                if crop['profit_per_area'] > 0:  # Only allocate if profit is positive
+                    allocated_area = min(crop['area'], remaining_area)
+                    if allocated_area >= 0.1:  # Only allocate if area is at least 0.1 hectares
+                        allocation[crop['name']] = round(allocated_area, 2)
+                        remaining_area -= allocated_area
+                        
+                        crop_profit = allocated_area * crop['profit_per_area']
+                        total_profit += crop_profit
             else:
                 break
+        
+        # If there's still remaining area, allocate it to the most profitable crop
+        if remaining_area > 0:
+            for crop in sorted_crops:
+                if crop['profit_per_area'] > 0:
+                    additional_area = min(remaining_area, crop['area'] - allocation.get(crop['name'], 0))
+                    if additional_area > 0:
+                        if crop['name'] in allocation:
+                            allocation[crop['name']] += additional_area
+                        else:
+                            allocation[crop['name']] = additional_area
+                        remaining_area -= additional_area
+                        total_profit += additional_area * crop['profit_per_area']
+                        if remaining_area == 0:
+                            break
+        
+        # Round off the allocated areas to whole numbers
+        for crop in allocation:
+            allocation[crop] = round(allocation[crop])
         
         return allocation, total_profit
 
     result, profit = greedy_crop_allocation(crops_list, total_area)
 
-    allocation_results = [{"crop": crop, "area": area} for crop, area in result.items()]
+    allocation_results = [{"crop": crop, "area": area} for crop, area in result.items() if area > 0]
 
     return render_template('index.html', 
                            state_code=state, 
