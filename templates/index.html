@@ -1,96 +1,117 @@
-<!DOCTYPE html>
+!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cropcast</title>
-    <link rel="stylesheet" href="../static/styles.css">
+    <link rel="stylesheet" href="../static/styles.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+      rel="stylesheet"
+    />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../static/script.js" defer></script>
-</head>
+  </head>
 
-<body>
+  <body>
     <header>
-        <div class="title">CROPCAST</div>
+      <div class="title">CROPCAST</div>
     </header>
     <main>
-        <div class="container">
-            <form action="/submit" method="POST">
-                <div class="dropdown-container">
-                    <select name="option1" class="menu">
-                        <option value="" disabled selected>Select State</option>
-                        <option value="Andhra Pradesh">Andhra Pradesh</option>
-                        <option value="Arunachal Pradesh">Arunachal Pradesh</option>
-                        <option value="Assam">Assam</option>
-                        <option value="Bihar">Bihar</option>
-                        <option value="Chhattisgarh">Chhattisgarh</option>
-                        <option value="Goa">Goa</option>
-                        <option value="Gujarat">Gujarat</option>
-                        <option value="Haryana">Haryana</option>
-                        <option value="Himachal Pradesh">Himachal Pradesh</option>
-                        <option value="Jharkhand">Jharkhand</option>
-                        <option value="Karnataka">Karnataka</option>
-                        <option value="Kerala">Kerala</option>
-                        <option value="Madhya Pradesh">Madhya Pradesh</option>
-                        <option value="Maharashtra">Maharashtra</option>
-                        <option value="Manipur">Manipur</option>
-                        <option value="Meghalaya">Meghalaya</option>
-                        <option value="Mizoram">Mizoram</option>
-                        <option value="Nagaland">Nagaland</option>
-                        <option value="Odisha">Odisha</option>
-                        <option value="Punjab">Punjab</option>
-                        <option value="Rajasthan">Rajasthan</option>
-                        <option value="Sikkim">Sikkim</option>
-                        <option value="Tamilnadu">Tamil Nadu</option>
-                        <option value="Telangana">Telangana</option>
-                        <option value="Tripura">Tripura</option>
-                        <option value="Uttar Pradesh">Uttar Pradesh</option>
-                        <option value="Uttarakhand">Uttarakhand</option>
-                        <option value="West Bengal">West Bengal</option>
-                    </select>
-                    <select name="option2">
-                        <option value="" disabled selected>Select District</option>
-                    </select>
-                    <input type="number" name="hectare" placeholder="Enter value in Hectare" min="0" step="0.01">
-                </div>
-                <div class="button-container">
-                    <button type="submit">Submit</button>
-                </div>
-            </form>
-            <div class="content-container">
-                <div class="main-content">
-                    <div class="inner-container">
-                        <table border="1">
-                            <tr>
-                                <th>Crop</th>
-                                <th>Area (1000 ha)</th>
-                                <th>Production (1000 tons)</th>
-                                <th>Yield</th>
-                            </tr>
-                            {% for crop in crops %}
-                            <tr>
-                                <td>{{ crop.name }}</td>
-                                <td>{{ crop.area }}</td>
-                                <td>{{ crop.production }}</td>
-                                <td> {{ crop.yield }}</td>
-                            </tr>
-                            {% endfor %}
-                        </table>
-                    </div>
-                </div>
-                <div class="side-content">
-                    <div class="inner-container">
-                        <canvas class="Pie" id="myPieChart" width="400" height="400"></canvas>
-                    </div>
-                </div>
+      <div class="container">
+        <form action="/submit" method="POST">
+          <div class="dropdown-container">
+            <select name="option1" class="menu">
+              <option value="" disabled selected>Select State</option>
+              <option value="Andhra Pradesh">Andhra Pradesh</option>
+              <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+              <option value="Assam">Assam</option>
+              <option value="Bihar">Bihar</option>
+              <option value="Chhattisgarh">Chhattisgarh</option>
+              <option value="Goa">Goa</option>
+              <option value="Gujarat">Gujarat</option>
+              <option value="Haryana">Haryana</option>
+              <option value="Himachal Pradesh">Himachal Pradesh</option>
+              <option value="Jharkhand">Jharkhand</option>
+              <option value="Karnataka">Karnataka</option>
+              <option value="Kerala">Kerala</option>
+              <option value="Madhya Pradesh">Madhya Pradesh</option>
+              <option value="Maharashtra">Maharashtra</option>
+              <option value="Manipur">Manipur</option>
+              <option value="Meghalaya">Meghalaya</option>
+              <option value="Mizoram">Mizoram</option>
+              <option value="Nagaland">Nagaland</option>
+              <option value="Odisha">Odisha</option>
+              <option value="Punjab">Punjab</option>
+              <option value="Rajasthan">Rajasthan</option>
+              <option value="Sikkim">Sikkim</option>
+              <option value="Tamilnadu">Tamil Nadu</option>
+              <option value="Telangana">Telangana</option>
+              <option value="Tripura">Tripura</option>
+              <option value="Uttar Pradesh">Uttar Pradesh</option>
+              <option value="Uttarakhand">Uttarakhand</option>
+              <option value="West Bengal">West Bengal</option>
+            </select>
+            <select name="option2">
+              <option value="" disabled selected>Select District</option>
+            </select>
+            <input
+              type="number"
+              name="hectare"
+              placeholder="Enter value in Hectare"
+              min="0"
+              step="0.01"
+            />
+          </div>
+          <div class="button-container">
+            <button type="submit">Submit</button>
+          </div>
+        </form>
+        <div class="content-container">
+          <div class="main-content">
+            <div class="inner-container">
+              <table border="1">
+                <tr>
+                  <th>Crop</th>
+                  <th>Area (1000 ha)</th>
+                  <th>Production (1000 tons)</th>
+                  <th>Yield</th>
+                </tr>
+                {% for crop in crops %}
+                <tr>
+                  <td>{{ crop.name }}</td>
+                  <td>{{ crop.area }}</td>
+                  <td>{{ crop.production }}</td>
+                  <td>{{ crop.yield }}</td>
+                </tr>
+                {% endfor %}
+              </table>
             </div>
+          </div>
+          <div class="side-content">
+            <div class="inner-container">
+              <canvas
+                class="Pie"
+                id="myPieChart"
+                width="400"
+                height="400"
+              ></canvas>
+            </div>
+          </div>
+          <h2>Crop Allocation Results</h2>
+          <p>Total Area: {{ total_area }} hectares</p>
+          <h3>Recommended Allocation:</h3>
+          <ul>
+            {% for item in allocation_results %}
+            <li>Plant {{ item.area }} hectares of {{ item.crop }}</li>
+            {% endfor %}
+          </ul>
+          <p>Total Estimated Profit: ₹{{ total_profit }}</p>
         </div>
+      </div>
     </main>
-    <footer>
-        SIDHARTHA S | MALAVIKA L | PRASANNA K P | STEPHEN PAUL I
-    </footer>
-</body>
+    <footer>SIDHARTHA S | MALAVIKA L | PRASANNA K P | STEPHEN PAUL I</footer>
+  </body>
 </html>

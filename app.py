@@ -18,7 +18,7 @@ def index():
 def submit():
     state = request.form.get('option1')
     district = request.form.get('option2')
-    area = request.form.get('hectare')
+    total_area = float(request.form.get('hectare'))
     
     df = pd.read_csv("ICRISAT-District Level Data All states.csv")
 
@@ -186,26 +186,92 @@ def submit():
                 crops[crop_name] = {"area": None, "production": None, "yield": None}
             crops[crop_name][metric] = value
 
-    # Calculate yield and prepare the crops list
     crops_list = []
+    
+    crop_prices = {
+        "Rice": 20.5,
+        "Wheat": 18.75,
+        "Maize": 15.0,
+        "Kharif Sorghum": 12.0,
+        "Rabi Sorghum": 13.0,
+        "Pearl Millet": 10.5,
+        "Finger Millet": 14.0,
+        "Barley": 16.0,
+        "Chickpea": 50.0,
+        "Pigeonpea": 60.0,
+        "Minor Pulses": 45.0,
+        "Groundnut": 70.0,
+        "Sesamum": 80.0,
+        "Rapeseed and Mustard": 65.0,
+        "Safflower": 55.0,
+        "Castor": 40.0,
+        "Linseed": 52.0,
+        "Sunflower": 75.0,
+        "Soyabean": 35.0,
+        "Oilseeds": 60.0,
+        "Sugarcane": 3.0,  
+        "Cotton": 80.0,
+        "Fruits": 40.0,  
+        "Vegetables": 20.0,  
+        "Potatoes": 10.0,
+        "Onion": 12.0,
+        "Fodder": 5.0  
+    }
+
     for crop, values in crops.items():
         area = values.get("area")
         production = values.get("production")
         crop_yield = round(production / area, 2) if area and production else None
+        price = crop_prices.get(crop, 0)
         crops_list.append({
             "name": crop,
             "area": area,
             "production": production,
-            "yield": crop_yield
+            "yield": crop_yield,
+            "price": price
         })
 
-    # Sort the crops list by production in descending order
     crops_list = sorted(crops_list, key=lambda x: x['production'], reverse=True)
 
-    # Render the template with the sorted crops list
-    return render_template('index.html', state_code=state, district_code=district, crops=crops_list)
+    def greedy_crop_allocation(crops, total_area):
+        for crop in crops:
+            if crop['area'] > 0:  
+                crop['yield'] = crop['production'] / crop['area']
+                crop['profit_per_area'] = crop['yield'] * crop['price']
+            else:
+                crop['yield'] = 0
+                crop['profit_per_area'] = 0
+        
+        sorted_crops = sorted(crops, key=lambda x: x['profit_per_area'], reverse=True)
+        
+        allocation = {}
+        remaining_area = total_area
+        total_profit = 0
+        
+        for crop in sorted_crops:
+            if remaining_area > 0:
+                allocated_area = min(crop['area'], remaining_area)
+                allocation[crop['name']] = round(allocated_area, 2)
+                remaining_area -= allocated_area
+                
+                crop_profit = allocated_area * crop['profit_per_area']
+                total_profit += crop_profit
+            else:
+                break
+        
+        return allocation, total_profit
 
+    result, profit = greedy_crop_allocation(crops_list, total_area)
 
+    allocation_results = [{"crop": crop, "area": area} for crop, area in result.items()]
+
+    return render_template('index.html', 
+                           state_code=state, 
+                           district_code=district, 
+                           crops=crops_list, 
+                           allocation_results=allocation_results, 
+                           total_profit=round(profit, 2),
+                           total_area=total_area)
 
 if __name__ == '__main__':
     app.run(debug=True)
