@@ -68,12 +68,14 @@
                                 <th>Crop</th>
                                 <th>Area (1000 ha)</th>
                                 <th>Production (1000 tons)</th>
+                                <th>Yield</th>
                             </tr>
                             {% for crop in crops %}
                             <tr>
                                 <td>{{ crop.name }}</td>
                                 <td>{{ crop.area }}</td>
                                 <td>{{ crop.production }}</td>
+                                <td> {{ crop.yield }}</td>
                             </tr>
                             {% endfor %}
                         </table>

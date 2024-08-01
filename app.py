@@ -183,20 +183,28 @@ def submit():
             metric = parts[-3].lower()
             value = data[key]["Predicted next value"]
             if crop_name not in crops:
-                crops[crop_name] = {"area": None, "production": None}
+                crops[crop_name] = {"area": None, "production": None, "yield": None}
             crops[crop_name][metric] = value
 
+    # Calculate yield and prepare the crops list
     crops_list = []
     for crop, values in crops.items():
+        area = values.get("area")
+        production = values.get("production")
+        crop_yield = round(production / area, 2) if area and production else None
         crops_list.append({
             "name": crop,
-            "area": values.get("area", None),
-            "production": values.get("production", None),
+            "area": area,
+            "production": production,
+            "yield": crop_yield
         })
-    
-    print(crops_list)
+
+    # Sort the crops list by production in descending order
     crops_list = sorted(crops_list, key=lambda x: x['production'], reverse=True)
+
+    # Render the template with the sorted crops list
     return render_template('index.html', state_code=state, district_code=district, crops=crops_list)
+
 
 
 if __name__ == '__main__':
