@@ -24,10 +24,9 @@ def submit():
 
     max_df = df[df['Dist Name'] == district]
 
-    print(max_df)
+    
 
     max_df.to_csv("data_ICRI.csv", index=False)
-    print("Result saved to 'data_ICRI.csv'")
     
     
 
@@ -62,9 +61,6 @@ def submit():
     y_train = torch.FloatTensor(y_train)
     X_test = torch.FloatTensor(X_test)
     y_test = torch.FloatTensor(y_test)
-
-    print(X.shape)
-    print(y.shape)
 
 
     class LSTMModel(nn.Module):
@@ -108,10 +104,6 @@ def submit():
             loss.backward()
             optimizer.step()
         
-        if (epoch + 1) % 10 == 0:
-            print(f'Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}')
-
-
     model.eval()
     with torch.no_grad():
         test_predictions = model(X_test)
@@ -120,8 +112,7 @@ def submit():
     y_test_unscaled = scaler.inverse_transform(y_test.numpy())
 
     mae = np.mean(np.abs(test_predictions_unscaled - y_test_unscaled))
-    print(f'Mean Absolute Error (unscaled): {mae:.4f}')
-
+    
     def predict_future_unscaled(model, scaler, last_sequence, num_predictions):
         model.eval()
         future_predictions = []
@@ -141,9 +132,6 @@ def submit():
     num_future_predictions = 5
     future_predictions_unscaled = predict_future_unscaled(model, scaler, last_sequence, num_future_predictions)
 
-    print("Future predictions (unscaled):")
-    for i, pred in enumerate(future_predictions_unscaled):
-        print(f"Year {i+1}: {pred}")
         
     raw_data = ""
 
@@ -155,8 +143,7 @@ def submit():
         raw_data += f"  Predicted change: {future_predictions_unscaled[0, i] - y_test_unscaled[-1, i]:.2f}\n"
         raw_data += "\n"
 
-    print(raw_data)
-
+    
     def parse_raw_data(raw_data):
         lines = raw_data.strip().split('\n')
         data = {}
