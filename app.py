@@ -89,7 +89,7 @@ def submit():
     optimizer = optim.Adam(model.parameters())
 
 
-    num_epochs = 200
+    num_epochs = 100
     batch_size = 64
 
     for epoch in range(num_epochs):
