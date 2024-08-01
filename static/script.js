@@ -1,22 +1,26 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const { crops: pieCrops, productions: pieProductions } = getTableData(5);
+    const { crops: pieCrops, productions: pieProductions } = getTableData(5, 'production');
     createPieChart(pieCrops, pieProductions);
 
-    const { crops: barCrops, productions: barProductions } = getTableData(10);
-    createBarChart(barCrops, barProductions);
+    const { crops: barCrops, productions: barYields } = getTableData(10, 'yield');
+    createBarChart(barCrops, barYields);
 });
 
-function getTableData(limit) {
+function getTableData(limit, type) {
     const crops = [];
-    const productions = [];
+    const values = [];
     const table = document.querySelector('table');
     const rows = table.querySelectorAll('tr');
     for (let i = 1; i <= limit && i < rows.length; i++) {
         const cells = rows[i].querySelectorAll('td');
         crops.push(cells[0].innerText);
-        productions.push(parseFloat(cells[2].innerText));
+        if (type === 'production') {
+            values.push(parseFloat(cells[2].innerText));
+        } else if (type === 'yield') {
+            values.push(parseFloat(cells[3].innerText));
+        }
     }
-    return { crops, productions };
+    return { crops, productions: values };
 }
 
 function createPieChart(crops, productions) {
@@ -37,7 +41,9 @@ function createPieChart(crops, productions) {
                     display: true,
                     text: 'Top 5 Crops [Production]',
                     font: {
-                        size: 32    
+                        size: 32,
+                        family: 'Jost',
+                        weight: 'lighter'
                     }
                 },
                 legend: {
@@ -66,15 +72,16 @@ function createBarChart(crops, productions) {
             plugins: {
                 title: {
                     display: true,
-                    text: 'Top 10 Crops [Production]',
+                    text: 'Top 10 Crops [Yield]',
+                    color: '#',
                     font: {
-                        size: 32    
+                        size: 32,
+                        family: 'Jost',
+                        weight: 'lighter'    
                     }
                 },
                 legend: {
-                    display: true,
-                    position: 'bottom',
-                    align: 'center'
+                    display: false,
                 },
             }
         }

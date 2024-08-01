@@ -84,8 +84,8 @@ def submit():
 
 
     input_size = X_train.shape[2]
-    hidden_size = 64
-    num_layers = 2
+    hidden_size = 32
+    num_layers = 1
     output_size = y_train.shape[1]
 
     model = LSTMModel(input_size, hidden_size, num_layers, output_size)
@@ -93,8 +93,8 @@ def submit():
     optimizer = optim.Adam(model.parameters())
 
 
-    num_epochs = 200
-    batch_size = 64
+    num_epochs = 50
+    batch_size = 32
 
     for epoch in range(num_epochs):
         for i in range(0, len(X_train), batch_size):
@@ -138,7 +138,7 @@ def submit():
         return future_predictions_unscaled
 
     last_sequence = X_test[-1]
-    num_future_predictions = 5
+    num_future_predictions = 3
     future_predictions_unscaled = predict_future_unscaled(model, scaler, last_sequence, num_future_predictions)
 
     print("Future predictions (unscaled):")

@@ -10,6 +10,7 @@
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;700&display=swap" rel="stylesheet">
   <script src="../static/script.js" defer></script>
 </head>
 
@@ -19,6 +20,7 @@
   </header>
   <main>
     <div class="container">
+      <!--Select Options-->
       <form action="/submit" method="POST">
         <div class="dropdown-container">
           <select name="option1" class="menu">
@@ -50,9 +52,12 @@
           <input type="number" name="hectare" placeholder="Enter value in Hectare" min="0" step="0.01" />
         </div>
         <div class="button-container">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+          </svg>
           <button type="submit">Submit</button>
         </div>
       </form>
+      <!--Box 1-->
       <div class="content-container">
         <div class="main-content">
           <div class="inner-container">
@@ -80,6 +85,7 @@
           </div>
         </div>
       </div>
+      <!--Box 2-->
       <div class="content-container">
         <div class="main-content">
           <div class="inner-container">
@@ -91,15 +97,21 @@
         <div class="side-content">
           <div class="inner-container">
             <div>
-              <h2>Crop Allocation Results</h2>
-              <p>Total Area: {{ total_area }} hectares</p>
-              <h3>Recommended Allocation:</h3>
-              <ul>
+              <div class="bar">
+                <h2 class="head">Crop Allocation</h2>
+                <p class="head">Total Area: {{ total_area }} hectares</p>
+              </div>
+              <h2 class="head">Recommended Allocation</h2>
+              <ul class="a">
                 {% for item in allocation_results %}
                 <li>Plant {{ item.area }} hectares of {{ item.crop }}</li>
                 {% endfor %}
               </ul>
-              <p>Total Estimated Profit: ₹{{ total_profit }}</p>
+              <div class="bar">
+                <h2 class="head">Total Estimated Profit:
+                  ₹{{ total_profit }}
+                </h2>
+              </div>
             </div>
           </div>
         </div>
