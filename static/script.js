@@ -1,12 +1,17 @@
+document.addEventListener('DOMContentLoaded', function () {
+    const { crops: pieCrops, productions: pieProductions } = getTableData(5);
+    createPieChart(pieCrops, pieProductions);
 
-function getTableData() {
+    const { crops: barCrops, productions: barProductions } = getTableData(10);
+    createBarChart(barCrops, barProductions);
+});
+
+function getTableData(limit) {
     const crops = [];
     const productions = [];
     const table = document.querySelector('table');
     const rows = table.querySelectorAll('tr');
-
-    // Loop through the first five rows, skipping the header row
-    for (let i = 1; i <= 5; i++) {
+    for (let i = 1; i <= limit && i < rows.length; i++) {
         const cells = rows[i].querySelectorAll('td');
         crops.push(cells[0].innerText);
         productions.push(parseFloat(cells[2].innerText));
@@ -14,7 +19,6 @@ function getTableData() {
     return { crops, productions };
 }
 
-// Create the pie chart
 function createPieChart(crops, productions) {
     const ctx = document.getElementById('myPieChart').getContext('2d');
     new Chart(ctx, {
@@ -39,12 +43,44 @@ function createPieChart(crops, productions) {
                 legend: {
                     display: true,
                     position: 'bottom',
-                    align:'center',
+                    align: 'center'
                 },
             }
         }
     });
 }
+
+function createBarChart(crops, productions) {
+    const ctx = document.getElementById('myBarChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: crops,
+            datasets: [{
+                data: productions,
+                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
+                hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0']
+            }]
+        },
+        options: {
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Top 10 Crops [Production]',
+                    font: {
+                        size: 32    
+                    }
+                },
+                legend: {
+                    display: true,
+                    position: 'bottom',
+                    align: 'center'
+                },
+            }
+        }
+    });
+}
+
 
 
 document.addEventListener("DOMContentLoaded", function () {
