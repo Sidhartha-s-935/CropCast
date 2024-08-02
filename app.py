@@ -1,4 +1,6 @@
+import datetime
 from flask import Flask, render_template, request
+import requests
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -6,6 +8,7 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
+from apscheduler.schedulers.background import BackgroundScheduler
 
 
 app = Flask(__name__)
@@ -13,6 +16,20 @@ app = Flask(__name__)
 @app.route('/')
 def index():
     return render_template('index.html')
+
+url = "https://cropcast.onrender.com/"  
+interval = 30  
+
+def reload_website():
+    try:
+        response = requests.get(url)
+        print(f"Reloaded at {datetime.datetime.now().isoformat()}: Status Code {response.status_code}")
+    except requests.RequestException as e:
+        print(f"Error reloading at {datetime.datetime.now().isoformat()}: {e}")
+
+scheduler = BackgroundScheduler()
+scheduler.add_job(reload_website, 'interval', seconds=interval)
+scheduler.start()
 
 @app.route('/submit', methods=['POST'])
 def submit():
@@ -112,7 +129,7 @@ def submit():
     y_test_unscaled = scaler.inverse_transform(y_test.numpy())
 
     mae = np.mean(np.abs(test_predictions_unscaled - y_test_unscaled))
-    
+    print(mae)
     def predict_future_unscaled(model, scaler, last_sequence, num_predictions):
         model.eval()
         future_predictions = []
@@ -276,4 +293,7 @@ def submit():
                            total_area=total_area)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    try:
+        app.run()
+    except (KeyboardInterrupt, SystemExit):
+        scheduler.shutdown()
