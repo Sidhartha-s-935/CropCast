@@ -4,7 +4,7 @@
         <a href = "https://cropcast.onrender.com">CropCast<a>
     </b>
     <br>
-    AI driven prediction tool<br>
+    AI driven crop yield prediction tool<br>
 </h1>
 
 ## Team Details

@@ -259,7 +259,6 @@ def submit():
             else:
                 break
         
-        # If there's still remaining area, allocate it to the most profitable crop
         if remaining_area > 0:
             for crop in sorted_crops:
                 if crop['profit_per_area'] > 0:
@@ -274,7 +273,6 @@ def submit():
                         if remaining_area == 0:
                             break
         
-        # Round off the allocated areas to whole numbers
         for crop in allocation:
             allocation[crop] = round(allocation[crop])
         
