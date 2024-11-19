@@ -37,27 +37,29 @@ def submit():
     district = request.form.get('option2')
     total_area = float(request.form.get('hectare'))
     
-    df = pd.read_csv("ICRISAT-District Level Data All states.csv")
+    # Load and preprocess the dataset
+    try:
+        df = pd.read_csv("ICRISAT-District Level Data All states.csv")
+        max_df = df[df['Dist Name'] == district]
+        if max_df.empty:
+            return "Error: District data not found in the dataset."
+        
+        max_df.to_csv("data_ICRI.csv", index=False)
+        data = pd.read_csv('data_ICRI.csv')
+        data['Year'] = pd.to_datetime(data['Year'], format='%Y')
+        data = data.set_index('Year')
+        
+        numerical_columns = data.select_dtypes(include=[np.number]).columns
+        data_numeric = data[numerical_columns].fillna(0)
+        if data_numeric.empty:
+            return "Error: No numeric data available for the district."
+        
+        scaler = MinMaxScaler()
+        data_scaled = scaler.fit_transform(data_numeric)
+    except Exception as e:
+        return f"Data processing error: {e}"
 
-    max_df = df[df['Dist Name'] == district]
-
-    
-
-    max_df.to_csv("data_ICRI.csv", index=False)
-    
-    
-
-    data = pd.read_csv('data_ICRI.csv')  
-    data['Year'] = pd.to_datetime(data['Year'], format='%Y')
-    data = data.set_index('Year')
-
-    numerical_columns = data.select_dtypes(include=[np.number]).columns
-    data_numeric = data[numerical_columns]
-    data_numeric = data_numeric.fillna(0)
-
-    scaler = MinMaxScaler()
-    data_scaled = scaler.fit_transform(data_numeric)
-
+    # Create sequences
     def create_sequences(data, seq_length):
         sequences = []
         targets = []
@@ -69,17 +71,20 @@ def submit():
         return np.array(sequences), np.array(targets)
 
     seq_length = 3  
-    X, y = create_sequences(data_scaled, seq_length)
+    try:
+        X, y = create_sequences(data_scaled, seq_length)
+        if len(X) == 0 or len(y) == 0:
+            return "Error: Insufficient data for training."
+        
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+        X_train = torch.FloatTensor(X_train)
+        y_train = torch.FloatTensor(y_train)
+        X_test = torch.FloatTensor(X_test)
+        y_test = torch.FloatTensor(y_test)
+    except Exception as e:
+        return f"Sequence creation error: {e}"
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-
-    X_train = torch.FloatTensor(X_train)
-    y_train = torch.FloatTensor(y_train)
-    X_test = torch.FloatTensor(X_test)
-    y_test = torch.FloatTensor(y_test)
-
-
+    # Define and train the model
     class LSTMModel(nn.Module):
         def __init__(self, input_size, hidden_size, num_layers, output_size):
             super(LSTMModel, self).__init__()
@@ -95,36 +100,48 @@ def submit():
             out = self.fc(out[:, -1, :])
             return out
 
-
     input_size = X_train.shape[2]
-    hidden_size = 32
-    num_layers = 1
+    hidden_size = 512
+    num_layers = 4
     output_size = y_train.shape[1]
 
     model = LSTMModel(input_size, hidden_size, num_layers, output_size)
     criterion = nn.MSELoss()
     optimizer = optim.Adam(model.parameters())
 
+    num_epochs = 200
+    batch_size = 512
+    try:
+        for epoch in range(num_epochs):
+            model.train()
+            for i in range(0, len(X_train), batch_size):
+                batch_X = X_train[i:i+batch_size]
+                batch_y = y_train[i:i+batch_size]
+                
+                outputs = model(batch_X)
+                loss = criterion(outputs, batch_y)
+                
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
+            if epoch % 10 == 0:
+                print(f"Epoch [{epoch}/{num_epochs}], Loss: {loss.item():.4f}")
+    except Exception as e:
+        return f"Training error: {e}"
 
-    num_epochs = 50
-    batch_size = 32
-
-    for epoch in range(num_epochs):
-        for i in range(0, len(X_train), batch_size):
-            batch_X = X_train[i:i+batch_size]
-            batch_y = y_train[i:i+batch_size]
-            
-            outputs = model(batch_X)
-            loss = criterion(outputs, batch_y)
-            
-            optimizer.zero_grad()
-            loss.backward()
-            optimizer.step()
+    # Model evaluation
+    try:
+        model.eval()
+        with torch.no_grad():
+            test_predictions = model(X_test)
         
-    model.eval()
-    with torch.no_grad():
-        test_predictions = model(X_test)
+        test_predictions_unscaled = scaler.inverse_transform(test_predictions.numpy())
+        y_test_unscaled = scaler.inverse_transform(y_test.numpy())
 
+        mae = np.mean(np.abs(test_predictions_unscaled - y_test_unscaled))
+        print(f"MAE: {mae}")
+    except Exception as e:
+        return f"Evaluation error: {e}"
     test_predictions_unscaled = scaler.inverse_transform(test_predictions.numpy())
     y_test_unscaled = scaler.inverse_transform(y_test.numpy())
 
@@ -193,27 +210,27 @@ def submit():
     crops_list = []
     
     crop_prices = {
-        "Rice": 2183,
-        "Wheat": 2275,
-        "Maize": 2090,
-        "Kharif Sorghum": 3054,
-        "Rabi Sorghum": 3100,
-        "Pearl Millet": 2291,
-        "Finger Millet": 2568,
-        "Barley": 1803,
-        "Chickpea": 2522,
-        "Pigeonpea": 4382,
-        "Minor Pulses": 1785,
-        "Groundnut": 3213,
-        "Sesamum": 3425,
-        "Rapeseed and Mustard": 5650,
-        "Safflower": 5800,
-        "Castor": 5954,
-        "Linseed": 2246,
-        "Sunflower": 6342,
-        "Soyabean": 4600,
-        "Oilseeds": 3467,  
-        "Cotton": 6620,
+        "Rice": 3200,  # Updated price
+        "Wheat": 2400,  # Updated price
+        "Maize": 2200,  # Updated price
+        "Kharif Sorghum": 3100,  # Updated price
+        "Rabi Sorghum": 3150,  # Updated price
+        "Pearl Millet": 2350,  # Updated price
+        "Finger Millet": 2600,  # Updated price
+        "Barley": 1900,  # Updated price
+        "Chickpea": 2600,  # Updated price
+        "Pigeonpea": 4500,  # Updated price
+        "Minor Pulses": 1850,  # Updated price
+        "Groundnut": 3300,  # Updated price
+        "Sesamum": 3500,  # Updated price
+        "Rapeseed and Mustard": 5700,  # Updated price
+        "Safflower": 5900,  # Updated price
+        "Castor": 6000,  # Updated price
+        "Linseed": 2300,  # Updated price
+        "Sunflower": 6400,  # Updated price
+        "Soyabean": 4700,  # Updated price
+        "Oilseeds": 3500,  # Updated price
+        "Cotton": 6700   # Updated price
     }
 
     for crop, values in crops.items():
@@ -292,6 +309,7 @@ def submit():
 
 if __name__ == '__main__':
     try:
-        app.run()
+         app.run()
     except (KeyboardInterrupt, SystemExit):
         scheduler.shutdown()
+
