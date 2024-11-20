@@ -1,127 +1,190 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cropcast</title>
-  <link rel="stylesheet" href="../static/styles.css" />
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;700&display=swap" rel="stylesheet">
-  <script src="../static/script.js" defer></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>CropCast</title>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="../static/script.js" defer></script>
+    <link rel="stylesheet" href="../static/styles.css" />
 </head>
 
 <body>
-  <header>
-    <div class="title">CROPCAST</div>
-  </header>
-  <main>
-    <div class="container">
-      <!--Select Options-->
-      <form action="/submit" method="POST">
-        <div class="dropdown-container">
-          <select name="option1" class="menu">
-            <option value="" disabled selected>Select State</option>
-            <option value="Andhra Pradesh">Andhra Pradesh</option>
-            <option value="Assam">Assam</option>
-            <option value="Bihar">Bihar</option>
-            <option value="Chhattisgarh">Chhattisgarh</option>
-            <option value="Gujarat">Gujarat</option>
-            <option value="Haryana">Haryana</option>
-            <option value="Himachal Pradesh">Himachal Pradesh</option>
-            <option value="Jharkhand">Jharkhand</option>
-            <option value="Karnataka">Karnataka</option>
-            <option value="Kerala">Kerala</option>
-            <option value="Madhya Pradesh">Madhya Pradesh</option>
-            <option value="Maharashtra">Maharashtra</option>
-            <option value="Odisha">Odisha</option>
-            <option value="Punjab">Punjab</option>
-            <option value="Rajasthan">Rajasthan</option>
-            <option value="Tamilnadu">Tamil Nadu</option>
-            <option value="Telangana">Telangana</option>
-            <option value="Uttar Pradesh">Uttar Pradesh</option>
-            <option value="Uttarakhand">Uttarakhand</option>
-            <option value="West Bengal">West Bengal</option>
-          </select>
-          <select name="option2">
-            <option value="" disabled selected>Select District</option>
-          </select>
-          <input type="number" name="hectare" placeholder="Enter value in hectare" min="0" step="0.01" >
-        </div>
-        <div class="button-container">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-          </svg>
-          <div class="button-container">
-            <button  type="submit">Submit</button>
-          </div>
-        </div>
-      </form>
-      <!--Box 1-->
-      <div class="content-container">
-        <div class="main-content">
-          <div class="inner-container">
-            <table border="1">
-              <tr>
-                <th>Crop</th>
-                <th>Area (1000 ha)</th>
-                <th>Production (1000 tons)</th>
-                <th>Yield</th>
-              </tr>
-              {% for crop in crops %}
-              <tr>
-                <td>{{ crop.name }}</td>
-                <td>{{ crop.area }}</td>
-                <td>{{ crop.production }}</td>
-                <td>{{ crop.yield | round(2) }}</td>
-              </tr>
-              {% endfor %}
-            </table>
-          </div>
-        </div>
-        <div class="side-content">
-          <div class="inner-container">
-            <canvas class="Pie" id="myPieChart" width="400" height="400"></canvas>
-          </div>
-        </div>
-      </div>
-      <!--Box 2-->
-      <div class="content-container">
-        <div class="main-content">
-          <div class="inner-container">
-            <div class="inner-container">
-              <canvas class="Pie" id="myBarChart" width="800" height="400"></canvas>
+    <header>
+        <div class="title">CROPCAST</div>
+    </header>
+    <main>
+        <div class="container">
+            <div class="hero-page">
+                <div class="grid-box">
+                    <div class="main-content">
+                        <div class="pad">
+                            <h2 class="topic">CROPCAST</h2>
+                        <p class="info">Welcome to CropCast, a tool designed to help you understand and analyze crop production and
+                            yield data specific to your region.
+                            Whether you’re a farmer, researcher, or simply interested in agricultural trends, CropCast
+                            provides valuable insights into crop performance.
+                            Explore the data, compare crops, and discover which ones are most efficient in terms of both
+                            production and yield. This tool is here to assist you in making informed decisions based on
+                            real, regional agricultural data.</p>
+                        <h2 class="topic">HOW TO USE</h2>
+                        <ul class="topicUL">
+                            <li class="topiclist">Select a state and district to view production and yield data specific
+                                to that region.
+                            </li>
+                            <li class="topiclist">Use the visualizations to compare crops, their efficiency, and how
+                                well they perform in
+                                terms of both total production and yield.</li>
+                        </ul>
+                        <h2 class="topic">UNDERSTANDING DATA</h2>
+                        <ul class="topicUL">
+                            <li class="topiclist">Production refers to the total amount of crop harvested from a given
+                                area (e.g., tons
+                                per 1,000 acres).</li>
+                            <li class="topiclist">Yield refers to the crop's productivity, measured by the amount
+                                harvested per unit of
+                                land .</li>
+                        </ul>
+                        </div>
+                    </div>
+                    <div class="side-content">
+                        <form action="/submit" method="POST">
+                            <div class="dropdown-container">
+                                <select name="option1">
+                                    <option value="" disabled selected>Select State</option>
+                                    <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                    <option value="Assam">Assam</option>
+                                    <option value="Bihar">Bihar</option>
+                                    <option value="Chhattisgarh">Chhattisgarh</option>
+                                    <option value="Gujarat">Gujarat</option>
+                                    <option value="Haryana">Haryana</option>
+                                    <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                    <option value="Jharkhand">Jharkhand</option>
+                                    <option value="Karnataka">Karnataka</option>
+                                    <option value="Kerala">Kerala</option>
+                                    <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                    <option value="Maharashtra">Maharashtra</option>
+                                    <option value="Odisha">Odisha</option>
+                                    <option value="Punjab">Punjab</option>
+                                    <option value="Rajasthan">Rajasthan</option>
+                                    <option value="Tamil Nadu">Tamil Nadu</option>
+                                    <option value="Telangana">Telangana</option>
+                                    <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                    <option value="Uttarakhand">Uttarakhand</option>
+                                    <option value="West Bengal">West Bengal</option>
+                                </select>
+                                <select name="option2">
+                                    <option value="" disabled selected>Select District</option>
+                                </select>
+                                <input type="number" name="hectare" placeholder="Enter value in acres">
+                                <button type="submit">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="disclaimer">
+                    The predictions and recommendations made by CropCast are not guaranteed and should be used as a
+                    guideline.
+                </div>
             </div>
-          </div>
-        </div>
-        <div class="side-content">
-          <div class="inner-container">
-            <div>
-              <div class="bar">
-                <h2 class="head">Crop Allocation</h2>
-                <p class="head">Total Area: {{ total_area }} hectares</p>
-              </div>
-              <h2 class="head">Recommended Allocation</h2>
-              <ul class="a">
-                {% for item in allocation_results %}
-                <li>Plant {{ item.area }} hectare of {{ item.crop }}</li>
-                {% endfor %}
-              </ul>
-              <div class="bar">
-                <h2 class="head">Total Estimated Profit:
-                  ₹{{ total_profit }}
-                </h2>
-              </div>
+            <div class="line"></div>
+            <div class="result-page">
+                <div class="section-1">
+                    <div class="table-box">
+                        <table border="1">
+                            <tr>
+                                <th>Crop</th>
+                                <th>Area (1000 ha)</th>
+                                <th>Production (1000 tons)</th>
+                                <th>Yield</th>
+                            </tr>
+                            {% for crop in crops %}
+                            <tr>
+                                <td>{{ crop.name }}</td>
+                                <td>{{ crop.area }}</td>
+                                <td>{{ crop.production }}</td>
+                                <td>{{ crop.yield | round(2) }}</td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                    <div class="plot-box">
+                        <div>
+                            <div class="topbar">
+                                <h2>Crop Allocation</h2>
+                                <h3>{{ total_area }} Acres</h3>
+                            </div>
+                            <h2 class="header">Recommended Allocation</h2>
+                            <ul>
+                                {% for item in allocation_results %}
+                                <li>Plant {{ item.area }} acres of {{ item.crop }}</li>
+                                {% endfor %}
+                            </ul>
+                            <div class="topbar final">
+                                <h2>Total Estimated Profit</h2>
+                                <h3>₹{{ total_profit }}</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="line"></div>
+                <div class="section-2">
+                    <div class="pie-box">
+                        <canvas class="Pie" id="myPieChart" width="400" height="400"></canvas>
+                    </div>
+                    <div class="info-box">
+                        <div class="topbar">
+                            <h2>Explanation</h2>
+                        </div>
+                        <div class="inside-box">
+                            <p>
+                                Historical data from your district highlights the top five crops known for their high
+                                rate of production. These crops consistently produce the highest crop yield per 1,000
+                                acres, making them the most efficient choices for cultivation.These Crops are
+                            </p>
+                            <div class="pie-explanation-box" id="pieExplanationBox">
+                                <!-- Dynamic explanations for Pie chart will be inserted here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="line"></div>
+                <div class="section-3">
+                    <div class="info-box">
+                        <div class="topbar">
+                            <h2>Explanation</h2>
+                        </div>
+                        <div class="inside-box">
+                            <p>
+                                Based on historical data, your district’s top 10 highest-yielding crops per 1000 acres
+                                are,
+                            </p>
+                            <div class="bar-explanation-box" id="barExplanationBox">
+                                <!-- Dynamic explanations for Bar chart will be inserted here -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bar-box">
+                        <canvas class="Bar" id="myBarChart" width="600" height="300"></canvas>
+                    </div>
+                </div>
+
             </div>
-          </div>
         </div>
-      </div>
-    </div>
-    <div class="disclaimer">Disclaimer: The data provided by CropCast may or may not be accurate and is predicted based only on the given dataset</div>
-  </main>
-  <footer><a href="https://github.com/Sidhartha-s-935">SIDHARTHA S</a> |<a href="https://github.com/Mxlzz31"> MALAVIKA L </a>|<a href="https://github.com/wisebreadloaf"> PRASANNA K P </a>|<a href="https://github.com/StephenPaul-03"> STEPHEN PAUL I</a></footer>
+    </main>
+
+    <footer>
+        <a href="https://github.com/Sidhartha-s-935">SIDHARTHA S</a> |
+        <a href="https://github.com/Mxlzz31">MALAVIKA L</a> |
+        <a href="https://github.com/wisebreadloaf">PRASANNA K P</a> |
+        <a href="https://github.com/StephenPaul-03">STEPHEN PAUL I</a>
+    </footer>
 </body>
 
 </html>

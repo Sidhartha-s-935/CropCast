@@ -1,10 +1,31 @@
 document.addEventListener('DOMContentLoaded', function () {
     const { crops: pieCrops, productions: pieProductions } = getTableData(5, 'production');
     createPieChart(pieCrops, pieProductions);
+    populatePieChartExplanation(pieCrops, pieProductions);  // Populate explanation for pie chart
 
     const { crops: barCrops, productions: barYields } = getTableData(10, 'yield');
     createBarChart(barCrops, barYields);
+
+    // Sort bar chart data by production in ascending order
+    const sortedBarData = sortDataByProduction(barCrops, barYields);
+    populateBarChartExplanation(sortedBarData.crops, sortedBarData.productions);  // Populate explanation for bar chart
 });
+
+// Function to sort crops and productions based on production value in ascending order
+function sortDataByProduction(crops, productions) {
+    const data = crops.map((crop, index) => {
+        return { crop, production: productions[index] };
+    });
+
+    // Sort by production value in ascending order
+    data.sort((a, b) => b.production - a.production);
+
+    // Unzip the sorted data into separate arrays
+    const sortedCrops = data.map(item => item.crop);
+    const sortedProductions = data.map(item => item.production);
+
+    return { crops: sortedCrops, productions: sortedProductions };
+}
 
 function getTableData(limit, type) {
     const crops = [];
@@ -23,7 +44,7 @@ function getTableData(limit, type) {
     return { crops, productions: values };
 }
 
-function createPieChart(crops, productions) {
+function createPieChart(crops, productions, titleColor = '#000') {
     const ctx = document.getElementById('myPieChart').getContext('2d');
     new Chart(ctx, {
         type: 'doughnut',
@@ -39,24 +60,46 @@ function createPieChart(crops, productions) {
             plugins: {
                 title: {
                     display: true,
-                    text: 'Top 5 Crops [Production]',
+                    text: 'High-Production Crops',
                     font: {
                         size: 32,
                         family: 'Jost',
                         weight: 'lighter'
-                    }
+                    },
+                    color: titleColor // Allows customization of the title color
                 },
                 legend: {
                     display: true,
                     position: 'bottom',
                     align: 'center'
                 },
+                tooltip: {
+                    callbacks: {
+                        label: function (tooltipItem) {
+                            const value = tooltipItem.raw;
+                            return `${value} Ton(s)`;
+                        }
+                    }
+                }
             }
         }
     });
 }
 
-function createBarChart(crops, productions) {
+
+function populatePieChartExplanation(crops, productions) {
+    const explanationBox = document.getElementById('pieExplanationBox');
+    explanationBox.innerHTML = '';  // Clear any existing explanation
+
+    crops.forEach((crop, index) => {
+        const production = productions[index];
+        const explanation = document.createElement('p');
+        explanation.textContent = `${index + 1}. ${crop}: ${production} ton(s)`;
+        explanationBox.appendChild(explanation);
+    });
+}
+
+function createBarChart(crops, productions, titleColor = '#000') {
     const ctx = document.getElementById('myBarChart').getContext('2d');
     new Chart(ctx, {
         type: 'bar',
@@ -72,23 +115,41 @@ function createBarChart(crops, productions) {
             plugins: {
                 title: {
                     display: true,
-                    text: 'Top 10 Crops [Yield]',
-                    color: '#',
+                    text: 'High Yield Crops',
                     font: {
                         size: 32,
                         family: 'Jost',
-                        weight: 'lighter'    
-                    }
+                        weight: 'lighter'
+                    },
+                    color: titleColor // Allows customization of the title color
                 },
                 legend: {
                     display: false,
                 },
+                tooltip: {
+                    callbacks: {
+                        label: function (tooltipItem) {
+                            const value = tooltipItem.raw;
+                            return `${value} Ton(s) per acres`;
+                        }
+                    }
+                }
             }
         }
     });
 }
 
+function populateBarChartExplanation(crops, productions) {
+    const explanationBox = document.getElementById('barExplanationBox');
+    explanationBox.innerHTML = '';  // Clear any existing explanation
 
+    crops.forEach((crop, index) => {
+        const production = productions[index];
+        const explanation = document.createElement('p');
+        explanation.textContent = `${index + 1}. ${crop}: ${production} tons per acres`;
+        explanationBox.appendChild(explanation);
+    });
+}
 
 document.addEventListener("DOMContentLoaded", function () {
     const stateToDistricts = {
@@ -116,29 +177,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const stateSelect = $('select[name="option1"]');
     const districtSelect = $('select[name="option2"]');
 
-    // Initialize Select2
-    stateSelect.select2({
-        placeholder: 'Select State',
-        allowClear: true
-    });
-
-    districtSelect.select2({
-        placeholder: 'Select District',
-        allowClear: true
-    });
-
     stateSelect.on('change', function () {
         const selectedState = $(this).val();
         const districts = stateToDistricts[selectedState] || [];
-
-        // Create new options for districts
         const districtOptions = districts.map(district => new Option(district, district, false, false));
-
-        // Update district select
         districtSelect.empty().append(districtOptions).trigger('change');
     });
-
-    // Ensure default options are set on page load
+    
     stateSelect.val(null).trigger('change');
     districtSelect.empty().append('<option value="" disabled selected>Select District</option>').trigger('change');
 
